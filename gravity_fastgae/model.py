@@ -1,4 +1,4 @@
-from fastgae.layers import *
+from gravity_fastgae.layers import *
 import tensorflow as tf
 
 """

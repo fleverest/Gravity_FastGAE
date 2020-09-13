@@ -1,4 +1,4 @@
-from fastgae.preprocessing import sparse_to_tuple
+from gravity_fastgae.preprocessing import sparse_to_tuple
 import networkx as nx
 import numpy as np
 import scipy.sparse as sp

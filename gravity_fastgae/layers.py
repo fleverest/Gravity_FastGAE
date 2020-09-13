@@ -1,4 +1,4 @@
-from fastgae.initializations import weight_variable_glorot
+from gravity_fastgae.initializations import weight_variable_glorot
 import tensorflow as tf
 
 _LAYER_UIDS = {} # Global unique layer ID dictionary for layer name assignment
@@ -101,7 +101,7 @@ class GraphConvolutionSparse(Layer):
 
 class InnerProductDecoder(Layer):
     """Symmetric inner product decoder layer"""
-    def __init__(self, fastgae = True, sampled_nodes, dropout = 0., act = tf.nn.sigmoid, **kwargs):
+    def __init__(self, sampled_nodes, fastgae = True, dropout = 0., act = tf.nn.sigmoid, **kwargs):
         super(InnerProductDecoder, self).__init__(**kwargs)
         self.dropout = dropout
         self.act = act
