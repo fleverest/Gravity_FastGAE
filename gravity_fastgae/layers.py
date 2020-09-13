@@ -99,7 +99,7 @@ class GraphConvolutionSparse(Layer):
         return outputs
 
 
-class InnerProductDecoder(Layer):
+class FastGravityDecoder(Layer):
     """Symmetric inner product decoder layer"""
     def __init__(self, sampled_nodes, fastgae = True, dropout = 0., act = tf.nn.sigmoid, **kwargs):
         super(InnerProductDecoder, self).__init__(**kwargs)
@@ -113,8 +113,17 @@ class InnerProductDecoder(Layer):
         # If FastGAE is used, we only reconstruct the sampled subgraph
         if self.fastgae:
             inputs = tf.gather(inputs, self.sampled_nodes)
-        x = tf.transpose(inputs)
-        x = tf.matmul(inputs, x)
-        x = tf.reshape(x, [-1])
-        outputs = self.act(x)
+        # Embedding vector = all dimensions on input except the last
+        # Mass parameter = last dimension of input
+        else:
+            inputs_z = inputs[:, 0:(FLAGS.dimension - 1)]
+        # Get pairwise node distances in embedding
+        dist = pairwise_distance(inputs_z, FLAGS.epsilon)
+        # Get mass parameter
+        inputs_mass = inputs[:,(FLAGS.dimension - 1):FLAGS.dimension]
+        mass = tf.matmul(tf.ones([tf.shape(inputs_mass)[0],1]),tf.transpose(inputs_mass))
+        # Gravity-Inspired decoding
+        outputs = mass - tf.scalar_mul(FLAGS.lamb, tf.log(dist))
+        outputs = tf.reshape(outputs,[-1])
+        outputs = self.act(outputs)
         return outputs

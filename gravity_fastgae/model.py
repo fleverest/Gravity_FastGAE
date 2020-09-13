@@ -71,7 +71,7 @@ class GCNModelAE(Model):
                                        dropout = self.dropout,
                                        logging = self.logging)(self.hidden)
 
-        self.reconstructions = InnerProductDecoder(fastgae = True, # Whether to use FastGAE
+        self.reconstructions = FastGravityDecoder(fastgae = True, # Whether to use FastGAE
                                                    sampled_nodes = self.sampled_nodes, # FastGAE subgraph
                                                    act = lambda x: x,
                                                    logging = self.logging)(self.z_mean)
@@ -119,7 +119,7 @@ class GCNModelVAE(Model):
 
         self.z = self.z_mean + tf.random_normal([self.n_samples, 16]) * tf.exp(self.z_log_std)
 
-        self.reconstructions = InnerProductDecoder(fastgae = True, # Whether to use FastGAE
+        self.reconstructions = FastGravityDecoder(fastgae = True, # Whether to use FastGAE
                                                    sampled_nodes = self.sampled_nodes, # FastGAE subgraph
                                                    act = lambda x: x,
                                                    logging = self.logging)(self.z_mean)
